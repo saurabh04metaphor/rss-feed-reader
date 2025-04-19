@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h2>Your RSS Feeds</h2>
+  <ul>
+    {% for feed in feeds %}
+      <li>{{ feed.title|default:feed.url }}</li>
+    {% empty %}
+      <li>No feeds subscribed yet.</li>
+    {% endfor %}
+  </ul>
+
+  <h4>Add New Feed</h4>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Add Feed</button>
+  </form>
+{% endblock %}

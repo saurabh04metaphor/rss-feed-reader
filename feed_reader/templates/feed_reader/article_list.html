@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% load humanize %}
+
+{% block content %}
+<h2>Latest Articles</h2>
+
+{% if items %}
+  <ul>
+    {% for item in items %}
+      <li style="opacity: {% if item.read %}0.6{% else %}1{% endif %};">
+        <a href="{% url 'article_detail' item.pk %}" 
+           {% if item.read %}class="text-muted"{% endif %}>
+           {{ item.title }}
+        </a><br>
+        <small>From: {{ item.feed.title|default:item.feed.url }} | Published: {{ item.published|naturaltime }}</small>
+      </li>
+    {% endfor %}
+  </ul>
+{% else %}
+  <p>No articles found. Try adding some feeds!</p>
+{% endif %}
+
+{% endblock %}
