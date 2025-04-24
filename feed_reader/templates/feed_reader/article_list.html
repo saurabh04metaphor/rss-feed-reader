@@ -2,22 +2,28 @@
 {% load humanize %}
 
 {% block content %}
-<h2>Latest Articles</h2>
+<div class="container">
+  <h2 class="mb-4">Latest Articles</h2>
 
-{% if items %}
-  <ul>
-    {% for item in items %}
-      <li style="opacity: {% if item.read %}0.6{% else %}1{% endif %};">
-        <a href="{% url 'article_detail' item.pk %}" 
-           {% if item.read %}class="text-muted"{% endif %}>
-           {{ item.title }}
-        </a><br>
-        <small>From: {{ item.feed.title|default:item.feed.url }} | Published: {{ item.published|naturaltime }}</small>
-      </li>
-    {% endfor %}
-  </ul>
-{% else %}
-  <p>No articles found. Try adding some feeds!</p>
-{% endif %}
-
+  {% if items %}
+    <ul class="list-group">
+      {% for item in items %}
+        <li class="list-group-item d-flex justify-content-between align-items-start" style="opacity: {% if item.read %}0.6{% else %}1{% endif %};">
+          <div>
+            <a href="{% url 'article_detail' item.pk %}" 
+               {% if item.read %}class="text-muted"{% endif %}>
+               {{ item.title }}
+            </a><br>
+            <small class="text-muted">From: {{ item.feed.title|default:item.feed.url }} | Published: {{ item.published|naturaltime }}</small>
+          </div>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <div class="alert alert-info" role="alert">
+      <p>No articles found. Try adding some feeds!</p>
+      <a href="{% url 'feed_list' %}" class="btn btn-primary">Add Feeds</a>
+    </div>
+  {% endif %}
+</div>
 {% endblock %}

@@ -2,18 +2,22 @@
 
 {% block content %}
   <h2>Your RSS Feeds</h2>
-  <ul>
+  <ul class="list-group">
     {% for feed in feeds %}
-      <li>{{ feed.title|default:feed.url }}</li>
+      <li class="list-group-item d-flex justify-content-between align-items-center">
+        <a href="{% url 'article_list' feed.id %}" class="text-decoration-none">
+          {{ feed.title|default:feed.url }}
+        </a>
+      </li>
     {% empty %}
-      <li>No feeds subscribed yet.</li>
+      <li class="list-group-item">No feeds subscribed yet.</li>
     {% endfor %}
   </ul>
 
-  <h4>Add New Feed</h4>
-  <form method="post">
+  <h4 class="mt-4">Add New Feed</h4>
+  <form method="post" class="mt-3">
     {% csrf_token %}
     {{ form.as_p }}
-    <button type="submit">Add Feed</button>
+    <button type="submit" class="btn btn-success">Add Feed</button>
   </form>
 {% endblock %}

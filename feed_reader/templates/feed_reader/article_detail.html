@@ -11,7 +11,7 @@
 
   <p><a href="{{ item.link }}" target="_blank" rel="noopener noreferrer">Read full article on original site</a></p>
 
-  <p><a href="{% url 'article_list' %}">Back to Articles</a></p>
+  <p><a href="{% url 'article_list' item.feed.id %}">Back to Articles</a></p>
   <form method="post" action="{% url 'toggle_read' item.pk %}">
     {% csrf_token %}
     {% if item.read %}

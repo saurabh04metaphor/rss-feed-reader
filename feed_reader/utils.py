@@ -1,15 +1,16 @@
 import feedparser
 from datetime import datetime
 from django.utils.timezone import make_aware
+import logging
 from .models import Feed, FeedItem
 
+logger = logging.getLogger(__name__)
+
 def update_feed_items(feed: Feed):
-    """
-    Fetch and parse RSS feed items from feed.url, add new FeedItem objects to database.
-    """
+    logger.info(f"Updating feed: {feed.url}")
     parsed_feed = feedparser.parse(feed.url)
-    
-    # Update feed title and description if empty or changed
+    logger.debug(f"Parsed feed: {parsed_feed.feed}")
+
     if parsed_feed.feed.get('title') and feed.title != parsed_feed.feed.title:
         feed.title = parsed_feed.feed.title
     if parsed_feed.feed.get('description') and feed.description != parsed_feed.feed.description:
@@ -17,22 +18,21 @@ def update_feed_items(feed: Feed):
     feed.save()
 
     for entry in parsed_feed.entries:
-        guid = entry.get('id') or entry.get('guid') or entry.get('link')  # Unique identifier
+        guid = entry.get('id') or entry.get('guid') or entry.get('link')
         if not guid:
-            continue  # Skip if no unique id
-
-        # Check if item already exists
-        if FeedItem.objects.filter(guid=guid).exists():
+            logger.warning(f"Skipping entry without GUID: {entry}")
             continue
 
-        # Parse published date
+        if FeedItem.objects.filter(feed=feed, guid=guid).exists():
+            logger.info(f"Skipping existing item with GUID: {guid} for feed: {feed.id}")
+            continue
+
         published_parsed = entry.get('published_parsed') or entry.get('updated_parsed')
         if published_parsed:
             published = make_aware(datetime(*published_parsed[:6]))
         else:
             published = datetime.now()
 
-        # Create new FeedItem
         FeedItem.objects.create(
             feed=feed,
             guid=guid,
@@ -41,3 +41,4 @@ def update_feed_items(feed: Feed):
             summary=entry.get('summary', ''),
             published=published,
         )
+        logger.info(f"Created FeedItem with GUID: {guid}")

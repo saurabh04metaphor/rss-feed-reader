@@ -12,7 +12,7 @@ def signup(request):
         if form.is_valid():
             user = form.save()
             login(request, user)
-            return redirect('home')  # Create 'home' route later
+            return redirect('feed_list')  # Create 'home' route later
     else:
         form = SignUpForm()
     return render(request, 'registration/signup.html', {'form': form})
@@ -32,14 +32,21 @@ def home(request):
             feed.user = request.user
             # Optionally, fetch feed title/description later
             feed.save()
-            return redirect('home')
+            return redirect('feed_list')
     return render(request, 'feed_reader/feed_list.html', {'feeds': feeds, 'form': form})
 
 @login_required
-def article_list(request):
+def article_list(request, id=None):
     # Get all articles from feeds user subscribes to, order by published date
-    items = FeedItem.objects.filter(feed__user=request.user).order_by('-published')
+    if id:
+        feed = get_object_or_404(Feed, pk=id)
+        items = FeedItem.objects.filter(feed=feed).order_by('-published')
+    else:
+        items = FeedItem.objects.filter(feed__user=request.user).order_by('-published')
+
     return render(request, 'feed_reader/article_list.html', {'items': items})
+    '''items = FeedItem.objects.filter(feed__user=request.user).order_by('-published')
+    return render(request, 'feed_reader/article_list.html', {'items': items})'''
 
 @login_required
 def article_detail(request, pk):

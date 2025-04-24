@@ -16,10 +16,11 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from feed_reader import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('django.contrib.auth.urls')),  # Built-in auth
-    path('accounts/', include('feed_reader.urls')),  # For signup (custom)
+    path('accounts/signup/', views.signup, name='signup'),  # For signup (custom)
     path('', include('feed_reader.urls')),  # App URLs
 ]
