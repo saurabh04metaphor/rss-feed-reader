@@ -2,23 +2,24 @@
 {% load humanize %}
 
 {% block content %}
-  <h2>{{ item.title }}</h2>
-  <p><small>From: {{ item.feed.title|default:item.feed.url }} | Published: {{ item.published|naturaltime }}</small></p>
+<div class="container">
+  <h2 class="mb-3">{{ item.title }}</h2>
+  <p><small class="text-muted">From: {{ item.feed.title|default:item.feed.url }} | Published: {{ item.published|naturaltime }}</small></p>
 
-  <div>
+  <div class="mb-4">
     {{ item.summary|safe }}
   </div>
 
-  <p><a href="{{ item.link }}" target="_blank" rel="noopener noreferrer">Read full article on original site</a></p>
+  <p><a href="{{ item.link }}" target="_blank" rel="noopener noreferrer" class="btn btn-primary">Read full article on original site</a></p>
 
-  <p><a href="{% url 'article_list' item.feed.id %}">Back to Articles</a></p>
-  <form method="post" action="{% url 'toggle_read' item.pk %}">
+  <p><a href="{% url 'article_list' item.feed.id %}" class="btn btn-secondary mt-3">Back to Articles</a></p>
+  <form method="post" action="{% url 'toggle_read' item.pk %}" class="mt-3">
     {% csrf_token %}
     {% if item.read %}
-      <button type="submit" class="btn btn-sm btn-outline-secondary">Mark as Unread</button>
+      <button type="submit" class="btn btn-outline-secondary">Mark as Unread</button>
     {% else %}
-      <button type="submit" class="btn btn-sm btn-outline-primary">Mark as Read</button>
+      <button type="submit" class="btn btn-outline-primary">Mark as Read</button>
     {% endif %}
   </form>
-  
+</div>
 {% endblock %}
