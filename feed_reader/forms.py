@@ -20,3 +20,6 @@ class FeedAddForm(forms.ModelForm):
     class Meta:
         model = Feed
         fields = ['url']
+        widgets = {
+            'url': forms.URLInput(attrs={'class': 'form-control'})
+        }

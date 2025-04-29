@@ -7,4 +7,5 @@ urlpatterns = [
     path('article/<int:pk>/', views.article_detail, name='article_detail'),
     path('article/<int:pk>/toggle_read/', views.toggle_read_status, name='toggle_read'),
     path('signup/', views.signup, name='signup'),
+    path('feed/<int:feed_id>/unsubscribe/', views.unsubscribe_feed, name='unsubscribe_feed'),
 ]

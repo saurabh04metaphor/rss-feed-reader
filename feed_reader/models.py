@@ -17,11 +17,11 @@ class FeedItem(models.Model):
     link = models.URLField()
     summary = models.TextField(blank=True)
     published = models.DateTimeField()
-    guid = models.CharField(max_length=255)  # Remove the unique constraint here
+    guid = models.CharField(max_length=255)  
     read = models.BooleanField(default=False)
 
     class Meta:
-        unique_together = ('feed', 'guid')  # Add this constraint
+        unique_together = ('feed', 'guid') 
 
     def __str__(self):
         return self.title

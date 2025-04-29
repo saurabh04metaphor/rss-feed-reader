@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login
 from .forms import SignUpForm, FeedAddForm
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from .models import Feed, FeedItem
@@ -29,13 +30,7 @@ def home(request):
     This view displays a list of feeds associated with the currently logged-in user
     and provides a form to add new feeds. If a POST request is made with valid form data,
     a new feed is created and associated with the user. After saving the feed, the 
-    `update_feeds` management command is executed to fetch the latest feed updates.
-    Args:
-        request (HttpRequest): The HTTP request object containing metadata about the request.
-    Returns:
-        HttpResponse: Renders the 'feed_reader/feed_list.html' template with the list of 
-        feeds and the feed addition form. If a new feed is successfully added, redirects 
-        to the 'feed_list' view.
+    `update_feed_items` function is called to fetch the latest feed updates for the new feed.
     """
     feeds = Feed.objects.filter(user=request.user)
     form = FeedAddForm()
@@ -44,11 +39,11 @@ def home(request):
         if form.is_valid():
             feed = form.save(commit=False)
             feed.user = request.user
-            # Optionally, fetch feed title/description later
             feed.save()
 
-            # Run the update_feeds command
-            subprocess.run(['venv\\Scripts\\python', 'manage.py', 'update_feeds'], cwd='c:\\Users\\Saurabh Bharti\\Desktop\\rss_reader')
+            # Fetch and parse the newly added feed
+            from .utils import update_feed_items
+            update_feed_items(feed)
 
             return redirect('feed_list')
     return render(request, 'feed_reader/feed_list.html', {'feeds': feeds, 'form': form})
@@ -103,4 +98,20 @@ def toggle_read_status(request, pk):
     item.read = not item.read
     item.save()
     return HttpResponseRedirect(reverse('article_detail', args=[pk]))
+
+@login_required
+def unsubscribe_feed(request, feed_id):
+    """
+    Handles unsubscribing from a feed.
+    Requires POST method and user authentication.
+    Only allows removal if the feed belongs to the current user.
+    """
+    feed = get_object_or_404(Feed, pk=feed_id, user=request.user)
+    
+    if request.method == 'POST':
+        feed.delete()
+        messages.success(request, f'Successfully unsubscribed from {feed.title or feed.url}')
+        return redirect('feed_list')
+    
+    return HttpResponseRedirect(reverse('feed_list'))
 # Create your views here.

@@ -3,12 +3,55 @@
 {% block content %}
 <div class="container">
   <h2 class="mb-4">Your RSS Feeds</h2>
+  
+  {% if messages %}
+    {% for message in messages %}
+      <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    {% endfor %}
+  {% endif %}
+
   <ul class="list-group">
     {% for feed in feeds %}
       <li class="list-group-item d-flex justify-content-between align-items-center">
-        <a href="{% url 'article_list' feed.id %}" class="text-decoration-none">
-          {{ feed.title|default:feed.url }}
-        </a>
+        <div>
+          <a href="{% url 'article_list' feed.id %}" class="text-decoration-none">
+            {{ feed.title|default:feed.url }}
+          </a>
+        </div>
+        <div class="btn-group" role="group">
+          <button type="button" 
+                  class="btn btn-outline-danger btn-sm" 
+                  data-bs-toggle="modal" 
+                  data-bs-target="#unsubscribeModal{{ feed.id }}">
+            Unsubscribe
+          </button>
+        </div>
+
+        <!-- Unsubscribe Confirmation Modal -->
+        <div class="modal fade" id="unsubscribeModal{{ feed.id }}" tabindex="-1" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title">Confirm Unsubscribe</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <p>Are you sure you want to unsubscribe from "{{ feed.title|default:feed.url }}"?</p>
+                <p class="text-muted small">This will remove all articles from this feed from your list.</p>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <form method="post" action="{% url 'unsubscribe_feed' feed.id %}" class="d-inline">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-danger">Unsubscribe</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
       </li>
     {% empty %}
       <li class="list-group-item">No feeds subscribed yet.</li>
