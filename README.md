@@ -1,4 +1,4 @@
-# RSS Reader
+# FeedFlow
 
 A Django-based RSS feed reader application that allows users to manage and read their favorite RSS feeds in one place.
 
