@@ -26,9 +26,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-ujs^tfv9o3_^-v4z7o+8!)2dhnku(b@jjyy^4^)n7v5#yoqh%9'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ['Saurabhbharti.pythonanywhere.com']
+ALLOWED_HOSTS = ['Saurabhbharti.pythonanywhere.com', 'localhost', '127.0.0.1']
 
 
 # Application definition
@@ -119,7 +119,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']  # Create a 'static' folder in project root
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
