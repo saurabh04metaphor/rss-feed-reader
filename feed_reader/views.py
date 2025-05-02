@@ -48,6 +48,14 @@ def home(request):
             return redirect('feed_list')
     return render(request, 'feed_reader/feed_list.html', {'feeds': feeds, 'form': form})
 
+def landing_page(request):
+    """
+    View for the landing page of the RSS reader application.
+    Displays a welcome message and key features for non-authenticated users,
+    or redirects to feed list for authenticated users.
+    """
+    return render(request, 'landing.html')
+
 @login_required
 def article_list(request, id=None):
     """

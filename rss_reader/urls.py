@@ -19,8 +19,9 @@ from django.urls import path, include
 from feed_reader import views
 
 urlpatterns = [
+    path('', views.landing_page, name='landing'),  # Landing page as root URL
+    path('feeds/', include('feed_reader.urls')),  # App URLs under /feeds/
     path('admin/', admin.site.urls),
-    path('accounts/', include('django.contrib.auth.urls')),  # Built-in auth
-    path('accounts/signup/', views.signup, name='signup'),  # For signup (custom)
-    path('', include('feed_reader.urls')),  # App URLs
+    path('accounts/', include('django.contrib.auth.urls')),
+    path('accounts/signup/', views.signup, name='signup'),
 ]

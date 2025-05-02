@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container text-center py-5">
+    <h1 class="display-4 mb-4">Welcome to FeedFlow</h1>
+    <p class="lead mb-4">Your personalized RSS feed reader that keeps you updated with the content you love.</p>
+    
+    <div class="row justify-content-center mb-5">
+        <div class="col-md-8">
+            <div class="card-group">
+                <div class="card border-0 bg-light m-2">
+                    <div class="card-body">
+                        <h3 class="h5 mb-3">Organize</h3>
+                        <p class="card-text">Subscribe to your favorite websites and organize all your feeds in one place.</p>
+                    </div>
+                </div>
+                <div class="card border-0 bg-light m-2">
+                    <div class="card-body">
+                        <h3 class="h5 mb-3">Stay Updated</h3>
+                        <p class="card-text">Get automatic updates from all your subscribed feeds in real-time.</p>
+                    </div>
+                </div>
+                <div class="card border-0 bg-light m-2">
+                    <div class="card-body">
+                        <h3 class="h5 mb-3">Track Progress</h3>
+                        <p class="card-text">Mark articles as read/unread and never lose track of your reading progress.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+        {% if user.is_authenticated %}
+            <a href="{% url 'feed_list' %}" class="btn btn-primary btn-lg px-4 gap-3">Go to My Feeds</a>
+        {% else %}
+            <a href="{% url 'login' %}" class="btn btn-primary btn-lg px-4 gap-3">Login</a>
+            <a href="{% url 'signup' %}" class="btn btn-outline-secondary btn-lg px-4">Sign Up</a>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
