@@ -36,6 +36,14 @@
               <a class="nav-link" href="{% url 'signup' %}">Sign Up</a>
             </li>
           {% endif %}
+          <li class="nav-item">
+            <a class="nav-link {% if request.resolver_match.url_name == 'feed_list' %}active{% endif %}" 
+               href="{% url 'feed_list' %}">My Feeds</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link {% if request.resolver_match.url_name == 'all_articles' %}active{% endif %}" 
+               href="{% url 'all_articles' %}">All Articles</a>
+          </li>
         </ul>
       </div>
     </div>
